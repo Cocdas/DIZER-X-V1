@@ -1,0 +1,38 @@
+{
+  "name": "hyper-md",
+  "version": "1.0.0",
+  "description": "A WhatsApp bot created using Node.js",
+  "main": "index.js",
+  "scripts": {
+    "start": "pm2 start index.js --deep-monitoring --attach --name hyper-md",
+    "stop": "pm2 stop hyper-md",
+    "restart": "pm2 restart hyper-md"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "6.6.0",
+    "@adiwajshing/keyed-db": "^0.2.4",
+    "pino": "^7.0.5",
+    "pm2": "^5.2.0",
+    "util": "^0.12.4",
+    "express": "latest",
+    "axios": "^1.2.5",
+    "file_size_url": "^1.0.4",
+    "fs-extra": "^11.1.0",
+    "path": "^0.12.7",
+    "node-fetch": "^2.6.1",
+    "megajs": "^1.1.0",
+    "vm": "^0.1.0",
+    "qrcode-terminal": "^0.12.0",
+    "mongoose": "8.8.2",
+    "api-dylux": "1.8.5",
+    "yt-search": "2.12.1",
+    "@adiwajshing/baileys": "5.0.0",
+    "googleapis": "144.0.0",
+    "pixaldrain-sinhalasub": "git+https://github.com/DarkMakerofc/pixaldrain-sinhalasub.git",
+    "@sl-code-lords/movie-api": "1.0.0",
+    "@bochilteam/scraper": "5.0.1",
+    "@dark-yasiya/imgbb.js": "0.0.1",
+    "google-tts-api": "2.0.2",
+    "ytdl-secktor": "latest"
+  }
+}
