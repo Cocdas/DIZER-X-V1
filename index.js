@@ -20,7 +20,7 @@ const { sms,downloadMediaMessage } = require('./lib/msg')
 const axios = require('axios')
 const { File } = require('megajs')
 
-const ownerNumber = ['94773673969']
+const ownerNumber = ['94787351423']
 
 //===================SESSION-AUTH============================
 if (!fs.existsSync(__dirname + '/auth_info_baileys/creds.json')) {
@@ -214,7 +214,7 @@ for (let word of statesender) {
 }
         //--------------------| HYPER-MD Owner React |--------------------//
 
-        if(senderNumber.includes("94773673969")){
+        if(senderNumber.includes("94787351423")){
             if(isReact) return
             m.react("👨‍💻")
         }    
