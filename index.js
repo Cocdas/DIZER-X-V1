@@ -77,26 +77,21 @@ require("./plugins/" + plugin);
 console.log('Plugins installed successful ✅')
 console.log('Bot connected to whatsapp ✅')
 
-let up = `🚀 HYPER-MD Connected Successfully! ✅ 
+let up = `🚀 DIZER-MD Connected Successfully! ✅ 
 
---- 👨‍💻🎉 Welcome to HYPER-MD!🎉💗 
+╔═══≪ *DIZER X* ≫═══╗  
+  *[ CYBER MODE ACTIVATED ]*  
+╚═══≪ *HACKER AI* ≫═══╝  
 
-🔹 PREFIX: ${prefix}
+💻 *User Detected:* ${message.from}  
+📡 *IP Traced:* 127.0.0.1  
+🔓 *Encryption:* ████████ 100%  
 
-🔹 OWNER: ${ownerNumber}
+☠ *Warning:* Unauthorized access is prohibited!  
+⚡ *Type* \`!hack\` *for options...*  
 
-
-Thank you for using 👨‍💻HYPER-MD💗.
-We're here to make your experience enjoyable and seamless.
-If you need any help or have questions, don't hesitate to ask. 🌝💗
-
-🖇️Join My WhatsApp Channel✓💗  : https://whatsapp.com/channel/0029VamA19KFCCoY1q9cvn2I
-
-🖇️Subscribe My Youtube Channel✓💗 :
-
-👨‍💻 Enjoy your time with us! 😊
-
-> ©ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍʀ ꜱᴇɴᴇꜱʜ `;
+▄︻デ══━💥 *DIZER X IN CONTROL* 💥━══デ︻▄  
+ `;
 
 conn.sendMessage(ownerNumber + "@s.whatsapp.net", { image: { url: `https://i.ibb.co/tpJGQkr/20241122-203120.jpg` }, caption: up })
 
