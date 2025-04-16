@@ -38,52 +38,53 @@ const app = express();
 const port = process.env.PORT || 8000;
 //================================/
 async function connectToWA() {
-//==================MONGODB===========================
-const connectDB = require('./lib/mongodb')
-connectDB();
-//==============================================
-const {readEnv} = require('./lib/database')
-const config = await readEnv();
-const prefix = config.PREFIX
-//==================================================
+    const connectDB = require('./lib/mongodb')
+    connectDB();
 
-console.log("Connecting HYPER-MD 🧬...");
-const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/auth_info_baileys/')
-var { version } = await fetchLatestBaileysVersion()
+    const { readEnv } = require('./lib/database')
+    const config = await readEnv();
+    const prefix = config.PREFIX
 
-const conn = makeWASocket({
+    console.log("Connecting HYPER-MD 🧬...");
+    const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/auth_info_baileys/')
+    var { version } = await fetchLatestBaileysVersion()
+
+    const conn = makeWASocket({
         logger: P({ level: 'silent' }),
         printQRInTerminal: false,
         browser: Browsers.macOS("Firefox"),
         syncFullHistory: true,
         auth: state,
         version
-        })
-    
-conn.ev.on('connection.update', (update) => {
-const { connection, lastDisconnect } = update
-if (connection === 'close') {
-if (lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut) {
-connectToWA()
-}
-} else if (connection === 'open') {
-console.log('✌️ Installing... ')
-const path = require('path');
-fs.readdirSync("./plugins/").forEach((plugin) => {
-if (path.extname(plugin).toLowerCase() == ".js") {
-require("./plugins/" + plugin);
-}
-});
-console.log('Plugins installed successful ✅')
-console.log('Bot connected to whatsapp ✅')
+    })
 
-let up = `🚀 DIZER-MD Connected Successfully! ✅ 
+    conn.ev.on('connection.update', async (update) => {
+        const { connection, lastDisconnect } = update
+
+        if (connection === 'close') {
+            if (lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut) {
+                connectToWA()
+            }
+        } else if (connection === 'open') {
+            console.log('✌️ Installing... ')
+            const path = require('path');
+            fs.readdirSync("./plugins/").forEach((plugin) => {
+                if (path.extname(plugin).toLowerCase() == ".js") {
+                    require("./plugins/" + plugin);
+                }
+            });
+
+            console.log('Plugins installed successful ✅')
+            console.log('Bot connected to WhatsApp ✅')
+
+            // ✅ Send message to owner once connected
+            let up = `🚀 DIZER-MD Connected Successfully! ✅
 
 ╔═══≪ *DIZER X* ≫═══╗  
   *[ CYBER MODE ACTIVATED ]*  
 ╚═══≪ *HACKER AI* ≫═══╝  
 
-💻 *User Detected:* ${message.from}  
+💻 *Bot ID:* ${conn.user.id}
 📡 *IP Traced:* 127.0.0.1  
 🔓 *Encryption:* ████████ 100%  
 
@@ -91,13 +92,20 @@ let up = `🚀 DIZER-MD Connected Successfully! ✅
 ⚡ *Type* \`!hack\` *for options...*  
 
 ▄︻デ══━💥 *DIZER X IN CONTROL* 💥━══デ︻▄  
- `;
+`;
 
-conn.sendMessage(ownerNumber + "@s.whatsapp.net", { image: { url: `https://i.ibb.co/tpJGQkr/20241122-203120.jpg` }, caption: up })
+            conn.sendMessage(ownerNumber[0] + "@s.whatsapp.net", {
+                image: { url: `https://i.ibb.co/tpJGQkr/20241122-203120.jpg` },
+                caption: up
+            })
+        }
+    })
 
+    conn.ev.on('creds.update', saveCreds)
+
+    // Keep your existing conn.ev.on('messages.upsert', ...) logic here
+    // ...
 }
-})
-conn.ev.on('creds.update', saveCreds)  
 
 conn.ev.on('messages.upsert', async(mek) => {
 mek = mek.messages[0]
