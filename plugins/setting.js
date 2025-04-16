@@ -41,7 +41,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 let autoreact = config.AUTO_REACT === 'true' ? '♻️ 𝗼𝗻' : '🚫 𝗼𝗳𝗳';
 
         const vv = await conn.sendMessage(from, {
-            image: { url: 'https://8030.us.kg/file/zOm4HoO6YnQR.jpg' },
+            image: { url: 'https://i.ibb.co/ZRCcNkpQ/6193.jpg' },
             caption: `☠️ *Qᴜᴇᴇɴ ᴄʜᴏᴏᴛʏ ɴᴇʟᴜᴍɪ ᴍᴅ 𝗦𝗘𝗧𝗧𝗜𝗡𝗚𝗦* 🇱🇰\n
 ☠️ _*මෙම පනිවිඩය  විනාඩි 5 කින් ස්වයංක්‍රීයව මකා දමයි*_ ⚠️
 ┏━━━━━━━━━━━━━━━━━━┓
