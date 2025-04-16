@@ -7,7 +7,7 @@ const { lookup } = require('mime-types');
 const fs = require('fs');
 const path = require('path');
 
-//Apk Download
+// Apk Download
 cmd({
     pattern: "apk",
     desc: "Downloads Apk",
@@ -26,13 +26,22 @@ async (conn, mek, m, { from, quoted, body, q, reply }) => {
         const appInfo = await scraper.aptoideDl(appId);
         const buff = await getBuffer(appInfo.link);
         
+        // Get thumbnail image buffer from provided URL
+        const thumbBuffer = await getBuffer("https://i.ibb.co/ZRCcNkpQ/6193.jpg");
+        
         if (!buff || !appInfo.appname) {
             return await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
         }
         
         await conn.sendMessage(
             from,
-            { document: buff, caption: `> ©ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍʀ ꜱᴇɴᴇꜱʜ `, mimetype: "application/vnd.android.package-archive", filename: `${appInfo.appname}.apk` },
+            { 
+                document: buff, 
+                caption: `© ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅɪᴢᴇʀ`, 
+                mimetype: "application/vnd.android.package-archive", 
+                filename: `${appInfo.appname}.apk`,
+                thumbnail: thumbBuffer
+            },
             { quoted: mek }
         );
         
