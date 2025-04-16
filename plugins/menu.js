@@ -17,10 +17,10 @@ async (conn, mek, m, { from, reply, pushname }) => {
             isForwarded: true,
             forwardedNewsletterMessageInfo: {
                 newsletterName: "HYPER-MD",
-                newsletterJid: "120363325937635174@newsletter",
+                newsletterJid: "120363305237506243@newsletter",
             },
             externalAdReply: {
-                title: "HYPER-MD Bot Menu",
+                title: "DIZER-MD Bot Menu",
                 body: "©ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍʀ ꜱᴇɴᴇꜱʜ",
                 thumbnailUrl: "https://telegra.ph/file/3c64b5608dd82d33dabe8.jpg",
                 mediaType: 1,
