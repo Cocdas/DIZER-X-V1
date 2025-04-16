@@ -1,141 +1,100 @@
 const { cmd, commands } = require('../command');
-const fg = require('api-dylux');
-const yts = require('yt-search');
-const config = require('../config');
+const { ytsearch, ytmp3 } = require('@dark-yasiya/yt-dl.js');
 
-// ============ SONG DOWNLOAD COMMAND ============
 cmd({
-    pattern: "song",
-    react: "🎶",
-    desc: "Download songs",
-    category: "download",
-    filename: __filename,
-}, 
-async (conn, mek, m, {
-    from, quoted, body, isCmd, command, args, q, reply
-}) => {
-    try {
-        if (!q) return reply("Please provide a URL or title to download the song.");
+  pattern: "song",
+  react: "🎵",
+  alias: ["ytmp3", "mp3"],
+  desc: "Download Your Songs.",
+  category: "download",
+  filename: __filename
+}, async (conn, mek, m, { from, q, reply }) => {
+  try {
+    if (!q) return reply("*❌ Provide a title or URL*");
 
-        const search = await yts(q);
-        const data = search.videos[0];
-        if (!data) return reply("No results found for your query. Please try again.");
+    const searchResults = await ytsearch(q);
+    if (searchResults.results.length < 1) return reply("*❌ No results found!*");
 
-        const url = data.url;
+    const firstResult = searchResults.results[0];
+    const downloadInfo = await ytmp3(firstResult.url);
 
-        let desc = `
-🎶 HYPER-MD SONG DOWNLOADER 🎶
+    const messageCaption = `
+🎶 *ᴅɪᴢᴇʀ ꜱᴏɴɢ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ* 📥
 
-| ➤ Title: ${data.title}
-| ➤ Duration: ${data.timestamp}
-| ➤ Uploaded: ${data.ago}
-| ➤ Views: ${data.views}
-| ➤ Author: ${data.author.name}
-| ➤ URL: ${data.url}
+🎵 *TITLE :* ${firstResult.title}
+🤵 *AUTHOR :* ${firstResult.author.name}
+⏱ *DURATION :* ${firstResult.timestamp}
+👀 *VIEWS :* ${firstResult.views}
+🖇️ *URL :* ${firstResult.url}
 
-🔢 Reply Below Number:
+*📥 CHOOSE A DOWNLOAD FORMAT;*
 
-1 || Audio Type
-2 || Document Type
+1️⃣ AUDIO FILE 
+2️⃣ DOCUMENT FILE
 
-©ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍʀ ꜱᴇɴᴇꜱʜ
-`;
-        const vv = await conn.sendMessage(from, { image: { url: data.thumbnail }, caption: desc }, { quoted: mek });
-
-        conn.ev.on('messages.upsert', async (msgUpdate) => {
-            const msg = msgUpdate.messages[0];
-            if (!msg.message || !msg.message.extendedTextMessage) return;
-
-            const selectedOption = msg.message.extendedTextMessage.text.trim();
-
-            if (msg.message.extendedTextMessage.contextInfo && msg.message.extendedTextMessage.contextInfo.stanzaId === vv.key.id) {
-                switch (selectedOption) {
-                    case '1':
-                        let down = await fg.yta(url);
-                        let downloadUrl = down.dl_url;
-                        await conn.sendMessage(from, { audio: { url: downloadUrl }, caption: 'Audio sent successfully ✅\n\n©ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍʀ ꜱᴇɴᴇꜱʜ ', mimetype: 'audio/mpeg' }, { quoted: mek });
-                        break;
-                    case '2':
-                        let downdoc = await fg.yta(url);
-                        let downloaddocUrl = downdoc.dl_url;
-                        await conn.sendMessage(from, { document: { url: downloaddocUrl }, caption: 'Document sent successfully ✅\n\n©ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍʀ ꜱᴇɴᴇꜱʜ ', mimetype: 'audio/mpeg', fileName: data.title + ".mp3" }, { quoted: mek });
-                        break;
-                    default:
-                        reply("Invalid option. Please select a valid option 🔴");
-                }
-            }
-        });
-
-    } catch (e) {
-        console.error(e);
-        await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
-        reply('An error occurred while processing your request.');
-    }
-});
-
-// ============ VIDEO DOWNLOAD COMMAND ============
-cmd({
-    pattern: 'video',
-    desc: 'Download videos',
-    react: "📽️",
-    category: 'download',
-    filename: __filename
-},
-async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, reply }) => {
-    try {
-        if (!q) return reply('Please enter a query or a URL!');
-
-        const search = await yts(q);
-        const data = search.videos[0];
-        if (!data) return reply("No results found for your query. Please try again.");
-
-        const url = data.url;
-
-        let desc = `📽️ HYPER-MD VIDEO DOWNLOADER 📽️
-
-| ➤ Title: ${data.title}
-| ➤ Views: ${data.views}
-| ➤ Description: ${data.description}
-| ➤ Time: ${data.timestamp}
-| ➤ Ago: ${data.ago}
-
-🔢 Reply Below Number:
-
-1 || Video in Normal Format
-2 || Video in Document Format
-
-©ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍʀ ꜱᴇɴᴇꜱʜ 
+> *© ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅɪᴢᴇʀ*
 `;
 
-        const vv = await conn.sendMessage(from, { image: { url: data.thumbnail }, caption: desc }, { quoted: mek });
+    // Forwarding Metadata
+    const contextInfo = {
+      forwardingScore: 999,
+      isForwarded: true,
+      forwardedNewsletterMessageInfo: {
+        newsletterName: "DIZER-MD",
+        newsletterJid: "120363305237506243@newsletter",
+      },
+      externalAdReply: {
+        title: "DIZER-MD Bot Menu",
+        body: "© ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅɪᴢᴇʀ",
+        thumbnailUrl: "https://i.ibb.co/ZRCcNkpQ/6193.jpg",
+        mediaType: 1,
+        renderLargerThumbnail: true,
+      },
+    };
 
-        conn.ev.on('messages.upsert', async (msgUpdate) => {
-            const msg = msgUpdate.messages[0];
-            if (!msg.message || !msg.message.extendedTextMessage) return;
+    const sentMessage = await conn.sendMessage(from, {
+      image: { url: firstResult.thumbnail || firstResult.image || '' },
+      caption: messageCaption,
+      contextInfo: contextInfo
+    }, { quoted: mek });
 
-            const selectedOption = msg.message.extendedTextMessage.text.trim();
+    conn.ev.on('messages.upsert', async update => {
+      const newMessage = update.messages[0];
+      if (!newMessage.message || !newMessage.message.extendedTextMessage) return;
 
-            if (msg.message.extendedTextMessage.contextInfo && msg.message.extendedTextMessage.contextInfo.stanzaId === vv.key.id) {
-                switch (selectedOption) {
-                    case '1':
-                        let downvid = await fg.ytv(url);
-                        let downloadvUrl = downvid.dl_url;
-                        await conn.sendMessage(from, { video: { url: downloadvUrl }, caption: 'Video sent successfully ✅\n\n©ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍʀ ꜱᴇɴᴇꜱʜ ', mimetype: 'video/mp4' }, { quoted: mek });
-                        break;
-                    case '2':
-                        let downviddoc = await fg.ytv(url);
-                        let downloadvdocUrl = downviddoc.dl_url;
-                        await conn.sendMessage(from, { document: { url: downloadvdocUrl }, caption: 'Document sent successfully ✅\n\n©ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍʀ ꜱᴇɴᴇꜱʜ ', mimetype: 'video/mp4', fileName: data.title + ".mp4" }, { quoted: mek });
-                        break;
-                    default:
-                        reply("Invalid option. Please select a valid option 🔴");
-                }
-            }
-        });
+      if (newMessage.message.extendedTextMessage.contextInfo &&
+          newMessage.message.extendedTextMessage.contextInfo.stanzaId === sentMessage.key.id) {
 
-    } catch (e) {
-        console.error(e);
-        await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
-        reply('An error occurred while processing your request.');
-    }
+        const userChoice = newMessage.message.extendedTextMessage.text.trim();
+        try {
+          switch (userChoice) {
+            case '1':
+              await conn.sendMessage(from, {
+                audio: { url: downloadInfo.download.url },
+                mimetype: 'audio/mpeg'
+              }, { quoted: mek });
+              break;
+
+            case '2':
+              await conn.sendMessage(from, {
+                document: { url: downloadInfo.download.url },
+                mimetype: 'audio/mpeg',
+                fileName: `${downloadInfo.result.title}.mp3`,
+                caption: "> *© ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅɪᴢᴇʀ*"
+              }, { quoted: mek });
+              break;
+
+            default:
+              reply("Invalid option. Please select a valid option 🔴");
+          }
+        } catch (err) {
+          console.error(err);
+          reply(`${err}`);
+        }
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    reply(`${err}`);
+  }
 });
